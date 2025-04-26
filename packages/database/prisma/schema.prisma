@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id       String @id @default(cuid())
+  email    String @unique
+  username String @unique
+  games    Game[]
+}
+
+model PuzzleLevel {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+  difficulty    String
+  seedTiles     String // JSON
+  initialRack   String // JSON
+  initialShares String // JSON
+  initialCash   Int
+  parScore      Int
+  turnLimit     Int
+  solutionMoves String // JSON
+  solutionBuys  String // JSON
+  createdAt     DateTime @default(now())
+  games         Game[] // one-to-many relation
+}
+
+/// A single player run against a puzzle
+model Game {
+  id          String      @id @default(cuid())
+  user        User        @relation(fields: [userId], references: [id])
+  userId      String
+  puzzle      PuzzleLevel @relation(fields: [puzzleId], references: [id])
+  puzzleId    String
+  moves       String // JSON
+  netWorth    Int
+  turnsUsed   Int
+  completedAt DateTime    @default(now())
+  status      String // "ACTIVE", "WON", "LOST"
+
+  @@index([puzzleId]) // quick leaderboard queries
+  @@index([status])
+}

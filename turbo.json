@@ -1,0 +1,32 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:generate": {
+      "persistent": true
+    },
+    "db:migrate": {
+      "persistent": true
+    },
+    "db:seed": {
+      "persistent": true
+    },
+    "db:studio": {
+      "persistent": true
+    },
+    "db:format": {
+      "persistent": true
+    }
+  }
+}
